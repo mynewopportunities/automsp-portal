@@ -1,0 +1,48 @@
+services:
+  automsp-portal:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: automsp-portal
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      NOTION_TOKEN: ${NOTION_TOKEN}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@automsp-portal-db:5432/${POSTGRES_DB}
+    depends_on:
+      automsp-portal-db:
+        condition: service_healthy
+    networks:
+      - master_net
+
+  automsp-portal-db:
+    image: postgres:16-alpine
+    container_name: automsp-portal-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-automsp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-automsp_portal}
+    volumes:
+      - automsp_portal_db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-automsp} -d ${POSTGRES_DB:-automsp_portal}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - master_net
+
+volumes:
+  automsp_portal_db_data:
+
+networks:
+  master_net:
+    external: true
