@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHeader } from '@/components/layout/page-header'
 import { StatCard } from '@/components/ui/stat-card'
+import { SwarmStatus } from '@/components/bos/swarm-status'
 import { queryDatabase } from '@/lib/notion/client'
 
 export const metadata: Metadata = { title: 'Dashboard' }
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
     { title: 'Finances', href: '/finances', icon: '💳', desc: 'Payments, invoices, subscriptions' },
     { title: 'Hiring', href: '/hiring', icon: '👥', desc: 'Job postings, interviews, onboarding' },
     { title: 'Operations', href: '/operations', icon: '⚙️', desc: 'Automations, SOPs, forms' },
+    { title: 'Leadership', href: '/leadership', icon: '🎯', desc: 'Meetings, contracts, legal' },
   ]
 
   return (
@@ -37,6 +39,14 @@ export default async function DashboardPage() {
         <StatCard title="Active Projects" value={projects.results.length} subtitle="in Fulfillment" icon={<span>📁</span>} />
         <StatCard title="Open Actions" value={actions.results.length} subtitle="pending completion" icon={<span>⚡</span>} />
         <StatCard title="Payments" value={payments.results.length} subtitle="records tracked" icon={<span>💳</span>} />
+      </div>
+
+      {/* BOS Swarm Status */}
+      <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--muted-foreground)' }}>
+        BOS Intelligence
+      </h2>
+      <div className="mb-8">
+        <SwarmStatus />
       </div>
 
       {/* Section grid */}

@@ -15,6 +15,12 @@ services:
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
       NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@automsp-portal-db:5432/${POSTGRES_DB}
+      N8N_BASE: ${N8N_BASE:-https://n8n.automsp.us}
+      BOS_STATE_PATH: /var/bos/bos_state.json
+      BOS_LOG_PATH: /var/bos/bos_coordinator.log
+    volumes:
+      - /root/automsp-bos/bos_state.json:/var/bos/bos_state.json:ro
+      - /root/automsp-bos/bos_coordinator.log:/var/bos/bos_coordinator.log:ro
     depends_on:
       automsp-portal-db:
         condition: service_healthy

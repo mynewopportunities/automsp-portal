@@ -13,6 +13,7 @@ const NAV = [
   { label: 'Finances',       href: '/finances',         icon: '💳' },
   { label: 'Hiring',         href: '/hiring',           icon: '👥' },
   { label: 'Operations',     href: '/operations',       icon: '⚙️' },
+  { label: 'Leadership',     href: '/leadership',       icon: '🎯' },
 ]
 
 export function TeamSidebar() {
