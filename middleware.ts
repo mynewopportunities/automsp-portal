@@ -29,9 +29,12 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  // Public routes
+  // Public routes — including BOS internal API (server-to-server, no auth needed)
   const publicPaths = ['/login', '/auth/callback', '/']
-  if (publicPaths.some((p) => pathname === p || pathname.startsWith('/auth/'))) {
+  if (
+    publicPaths.some((p) => pathname === p || pathname.startsWith('/auth/')) ||
+    pathname.startsWith('/api/bos/')
+  ) {
     return supabaseResponse
   }
 
